@@ -23,6 +23,10 @@ public class User {
     @Column(nullable = false, length = 60)
     private String hashedPassword;
 
+    public static int MAX_USERNAME_LENGTH = 64;
+    public static int MIN_PASSWORD_LENGTH = 8;
+    public static int MAX_PASSWORD_LENGTH = 64;
+
     public User() {
     }
 
@@ -31,6 +35,7 @@ public class User {
         this.hashedPassword = hashPassword(password);
     }
 
+    // TODO: should we have a HashedPassword class?
     public static String hashPassword(String password) {
         return HashingUtil.hashSHA256(password);
     }
