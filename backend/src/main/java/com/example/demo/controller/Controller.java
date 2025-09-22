@@ -8,35 +8,26 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.auth.Auth;
 import com.example.demo.dto.UserLoginInfo;
 import com.example.demo.dto.UserRegistrationInfo;
 import com.example.demo.entity.User;
 import com.example.demo.exception.UserNotFoundException;
+import com.example.demo.middleware.Auth;
+import com.example.demo.service.AuthService;
 import com.example.demo.service.UserService;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 public class Controller {
 
+    private final AuthService authService;
     private final UserService userService;
 
     @Autowired
-    public Controller(UserService userService) {
+    public Controller(AuthService authService, UserService userService) {
+        this.authService = authService;
         this.userService = userService;
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<User> handleLogin(@RequestBody UserLoginInfo userLogin) {
-        if (!userLogin.isValid()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        try {
-            User user = userService.getUserByUsernameAndPassword(
-                    userLogin.getUsername(), userLogin.getPassword());
-            return ResponseEntity.ok(user);
-        } catch (UserNotFoundException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @PostMapping("/register")
@@ -51,6 +42,28 @@ public class Controller {
         return ResponseEntity.ok(createdUser);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<User> handleLogin(
+            @RequestBody UserLoginInfo userLogin, HttpServletResponse response) {
+        if (!userLogin.isValid()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        try {
+            User user = userService.getUserByUsernameAndPassword(
+                    userLogin.getUsername(), userLogin.getPassword());
+            authService.login(response, user);
+            return ResponseEntity.ok(user);
+        } catch (UserNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @RequestMapping("/logout")
+    public ResponseEntity<String> handleLogout(HttpServletResponse response) {
+        authService.logout(response);
+        return ResponseEntity.ok("You have logged out");
+    }
+
     @Auth
     @RequestMapping("/auth-check")
     public ResponseEntity<String> handleAuthCheck() {
@@ -61,5 +74,5 @@ public class Controller {
     public ResponseEntity<String> handleCatchAll() {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Route not found");
     }
-    
+
 }

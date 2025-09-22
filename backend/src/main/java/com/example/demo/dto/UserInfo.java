@@ -2,17 +2,14 @@ package com.example.demo.dto;
 
 import com.example.demo.entity.User;
 
-public class UserInfo {
+public abstract class UserInfo {
 
-    private String username;
-    private String password;
+    protected String username;
+    protected String password;
 
-    public boolean isValid() {
-        return !username.isEmpty()
-                && username.length() <= User.MAX_USERNAME_LENGTH
-                && password.length() >= User.MIN_PASSWORD_LENGTH
-                && password.length() <= User.MAX_PASSWORD_LENGTH;
-    }
+    // TODO: create validate() that throws errors to incidate
+    // what is wrong with each field
+    public abstract boolean isValid();
 
     public String getUsername() {
         return username;

@@ -46,6 +46,7 @@ Optional Ideas:
 ## Quickstart
 
 ```bash
+AUTH_SECRET_KEY="MY_SECRET_KEY" \
 SPRING_DATASOURCE_URL="jdbc:postgresql://localhost:5432/postgres" \
 SPRING_DATASOURCE_USERNAME="postgres" \
 SPRING_DATASOURCE_PASSWORD="dev" \

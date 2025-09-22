@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 public class HashingUtil {
 
     private static final String SHA_256 = "SHA-256";
-    public static final int SHA_256_HASH_LENGTH = 64;
+    private static final int SHA_256_HASH_LENGTH = 32;
 
     public static String hashSHA256(String input) {
         try {

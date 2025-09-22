@@ -1,4 +1,4 @@
-package com.example.demo.auth;
+package com.example.demo.middleware;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -22,7 +22,7 @@ public class AuthMiddleware {
         this.authService = authService;
     }
 
-    @Pointcut("@annotation(com.example.demo.auth.Auth)")
+    @Pointcut("@annotation(com.example.demo.middleware.Auth)")
     public void authPointcut() {
     }
 

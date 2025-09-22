@@ -1,4 +1,4 @@
-package com.example.demo.auth;
+package com.example.demo.middleware;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

@@ -17,15 +17,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = MAX_USERNAME_LENGTH)
     private String username;
 
-    @Column(nullable = false, length = 60)
+    @Column(nullable = false, length = MAX_PASSWORD_LENGTH)
     private String hashedPassword;
 
-    public static int MAX_USERNAME_LENGTH = 64;
-    public static int MIN_PASSWORD_LENGTH = 8;
-    public static int MAX_PASSWORD_LENGTH = 64;
+    public static final int MAX_USERNAME_LENGTH = 64;
+    public static final int MIN_PASSWORD_LENGTH = 8;
+    public static final int MAX_PASSWORD_LENGTH = 64;
 
     public User() {
     }
@@ -38,6 +38,18 @@ public class User {
     // TODO: should we have a HashedPassword class?
     public static String hashPassword(String password) {
         return HashingUtil.hashSHA256(password);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getHashedPassword() {
+        return hashedPassword;
     }
 
 }
