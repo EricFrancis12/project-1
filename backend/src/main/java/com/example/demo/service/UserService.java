@@ -1,0 +1,42 @@
+package com.example.demo.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.entity.User;
+import com.example.demo.entity.UserRegistrationInfo;
+import com.example.demo.exception.UserNotFoundException;
+import com.example.demo.repository.UserRepository;
+
+@Service
+public class UserService {
+
+    private final UserRepository userRepository;
+
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public User registerUser(UserRegistrationInfo regInfo) {
+        return this.userRepository.save(regInfo.toUser());
+    }
+
+    public User getUserByUsername(String username) throws UserNotFoundException {
+        return this.userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> UserNotFoundException.fromUsername(username));
+    }
+
+    public User getUserByUsernameAndPassword(String username, String password) throws UserNotFoundException {
+        // TODO: hash password
+        return this.userRepository
+                .findByUsernameAndHashedPassword(username, password)
+                .orElseThrow(() -> UserNotFoundException.fromUsernameAndPassword(username, password));
+    }
+
+    public boolean usernameExists(String username) {
+        return !this.userRepository.findByUsername(username).isEmpty();
+    }
+
+}
