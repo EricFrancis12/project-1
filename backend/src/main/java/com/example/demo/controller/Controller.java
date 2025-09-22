@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.auth.Auth;
 import com.example.demo.dto.UserLoginInfo;
 import com.example.demo.dto.UserRegistrationInfo;
 import com.example.demo.entity.User;
@@ -50,8 +51,15 @@ public class Controller {
         return ResponseEntity.ok(createdUser);
     }
 
+    @Auth
+    @RequestMapping("/auth-check")
+    public ResponseEntity<String> handleAuthCheck() {
+        return ResponseEntity.ok("You are authenticated");
+    }
+
     @RequestMapping("/**")
     public ResponseEntity<String> handleCatchAll() {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Route not found");
     }
+    
 }
