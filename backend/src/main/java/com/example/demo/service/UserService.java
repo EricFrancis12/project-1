@@ -19,24 +19,24 @@ public class UserService {
     }
 
     public User registerUser(UserRegistrationInfo regInfo) {
-        return this.userRepository.save(regInfo.toUser());
+        return userRepository.save(regInfo.toUser());
     }
 
     public User getUserByUsername(String username) throws UserNotFoundException {
-        return this.userRepository
+        return userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> UserNotFoundException.fromUsername(username));
     }
 
     public User getUserByUsernameAndPassword(String username, String password) throws UserNotFoundException {
-        // TODO: hash password
-        return this.userRepository
-                .findByUsernameAndHashedPassword(username, password)
-                .orElseThrow(() -> UserNotFoundException.fromUsernameAndPassword(username, password));
+        String hashedPassword = User.hashPassword(password);
+        return userRepository
+                .findByUsernameAndHashedPassword(username, hashedPassword)
+                .orElseThrow(() -> UserNotFoundException.fromUsernameAndHashedPassword(username, hashedPassword));
     }
 
     public boolean usernameExists(String username) {
-        return !this.userRepository.findByUsername(username).isEmpty();
+        return !userRepository.findByUsername(username).isEmpty();
     }
 
 }

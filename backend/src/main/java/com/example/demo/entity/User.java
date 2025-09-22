@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+import com.example.demo.util.HashingUtil;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,8 +28,11 @@ public class User {
 
     public User(String username, String password) {
         this.username = username;
-        // TODO: hash password
-        this.hashedPassword = password;
+        this.hashedPassword = hashPassword(password);
+    }
+
+    public static String hashPassword(String password) {
+        return HashingUtil.hashSHA256(password);
     }
 
 }

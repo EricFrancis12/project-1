@@ -14,10 +14,10 @@ public class UserNotFoundException extends ResourceNotFoundException {
         return new UserNotFoundException(String.format("User not found with username (%s)", username));
     }
 
-    public static UserNotFoundException fromUsernameAndPassword(String username, String password) {
+    public static UserNotFoundException fromUsernameAndHashedPassword(String username, String hashedPassword) {
         return new UserNotFoundException(String.format(
-                "User not found with username (%s) and password (%s)",
-                username, password));
+                "User not found with username (%s) and hashed password (%s)",
+                username, hashedPassword));
     }
 
 }
