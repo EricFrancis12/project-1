@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dto.VerificationData;
 import com.example.demo.entity.User;
 import com.example.demo.exception.UnauthorizedException;
 
@@ -14,5 +15,5 @@ public interface AuthService {
 
     void logout(HttpServletResponse response);
 
-    void verify(HttpServletRequest request) throws UnauthorizedException;
+    VerificationData verify(HttpServletRequest request) throws UnauthorizedException;
 }

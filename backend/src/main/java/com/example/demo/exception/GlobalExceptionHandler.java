@@ -1,57 +1,28 @@
 package com.example.demo.exception;
 
-import java.io.File;
-
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import com.example.demo.dto.APIResponse;
+import com.example.demo.util.FrontendUtil;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleGenericException(Exception ex) {
+    public ResponseEntity<?> handleException(Exception ex) {
         if (ex instanceof UnauthorizedException) {
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("Unauthorized.");
+            return APIResponse.unauthorized();
         }
 
+        // If a matching static file is not found this exception will be thrown,
+        // so let the frontend check if it has any routes that match.
         if (ex instanceof NoResourceFoundException) {
-            try {
-                // TODO: read this file into memory only once in prod
-                File indexFile = new File("../frontend/dist/index.html");
-                if (indexFile.exists()) {
-                    Resource indexResource = new FileSystemResource(indexFile);
-                    return ResponseEntity.ok()
-                            .contentType(MediaType.TEXT_HTML)
-                            .body(indexResource);
-                } else {
-                    return ResponseEntity
-                            .status(HttpStatus.NOT_FOUND)
-                            .body("Resource not found");
-                }
-            } catch (Exception e) {
-                logError(e);
-                return ResponseEntity
-                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("Error serving frontend");
-            }
+            return FrontendUtil.serveFrontend();
         }
 
-        logError(ex);
-
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("An unexpected error occurred.");
-    }
-
-    private void logError(Exception ex) {
         String message;
         if (ex == null) {
             message = "An unknown error occurred";
@@ -59,6 +30,8 @@ public class GlobalExceptionHandler {
             message = "An unexpected error occurred: " + ex.getMessage();
         }
         System.err.println(message);
+
+        return APIResponse.internalServerError();
     }
 
 }

@@ -3,6 +3,7 @@ package com.example.demo.service;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.util.JWTUtil;
+import com.example.demo.dto.VerificationData;
 import com.example.demo.entity.User;
 import com.example.demo.exception.MissingEnvironmentVariableException;
 import com.example.demo.exception.UnauthorizedException;
@@ -41,7 +42,7 @@ public class JWTAuthService implements AuthService {
     }
 
     @Override
-    public void verify(HttpServletRequest request) throws UnauthorizedException {
+    public VerificationData verify(HttpServletRequest request) throws UnauthorizedException {
         Cookie jwtCookie = CookieUtil.getCookie(request, "jwt");
         if (jwtCookie == null) {
             throw new UnauthorizedException("JWT cookie not found");
@@ -68,7 +69,8 @@ public class JWTAuthService implements AuthService {
         }
 
         try {
-            Long.parseLong(userIdString);
+            long userId = Long.parseLong(userIdString);
+            return new VerificationData(userId);
         } catch (NumberFormatException ex) {
             throw new UnauthorizedException("JWT userId could not be converted to a Long");
         }

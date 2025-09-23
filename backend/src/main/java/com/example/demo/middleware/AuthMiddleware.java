@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.example.demo.exception.UnauthorizedException;
 import com.example.demo.service.AuthService;
 
 @Aspect
@@ -27,7 +28,7 @@ public class AuthMiddleware {
     }
 
     @Before("authPointcut()")
-    public void before(JoinPoint joinPoint) {
+    public void before(JoinPoint joinPoint) throws UnauthorizedException {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
                 .getRequestAttributes();
         if (requestAttributes == null) {

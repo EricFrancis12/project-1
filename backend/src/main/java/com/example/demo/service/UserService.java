@@ -22,6 +22,12 @@ public class UserService {
         return userRepository.save(regInfo.toUser());
     }
 
+    public User getUserById(long id) throws UserNotFoundException {
+        return userRepository
+                .findById(id)
+                .orElseThrow(() -> UserNotFoundException.fromId(id));
+    }
+
     public User getUserByUsername(String username) throws UserNotFoundException {
         return userRepository
                 .findByUsername(username)
