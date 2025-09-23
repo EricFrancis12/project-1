@@ -70,9 +70,4 @@ public class Controller {
         return ResponseEntity.ok("You are authenticated");
     }
 
-    @RequestMapping("/**")
-    public ResponseEntity<String> handleCatchAll() {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Route not found");
-    }
-
 }
