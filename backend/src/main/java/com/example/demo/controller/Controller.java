@@ -30,7 +30,7 @@ public class Controller {
         this.userService = userService;
     }
 
-    @PostMapping("/register")
+    @PostMapping("/api/register")
     public ResponseEntity<User> handleRegister(@RequestBody UserRegistrationInfo userReg) {
         if (!userReg.isValid()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -42,7 +42,7 @@ public class Controller {
         return ResponseEntity.ok(createdUser);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/api/login")
     public ResponseEntity<User> handleLogin(
             @RequestBody UserLoginInfo userLogin, HttpServletResponse response) {
         if (!userLogin.isValid()) {
@@ -58,7 +58,7 @@ public class Controller {
         }
     }
 
-    @RequestMapping("/logout")
+    @RequestMapping("/api/logout")
     public ResponseEntity<String> handleLogout(HttpServletResponse response) {
         authService.logout(response);
         return ResponseEntity.ok("You have logged out");
